@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+/*
+ * Roles live here as a plain array rather than a content collection:
+ * unlike projects they have no detail pages and no markdown body, so a
+ * collection would be machinery without payoff. Promote it later if that
+ * changes. ALL ENTRIES ARE PLACEHOLDERS pending Andrew's real CV.
+ */
+const roles = [
+  {
+    period: '2021 —',
+    role: 'Product Manager',
+    org: 'Ski company (placeholder name)',
+    location: 'Eugendorf, Austria',
+    notes: [
+      'Placeholder: the product line / category you own, one line.',
+      'Placeholder: one concrete thing shipped under your watch that you are proud of.',
+      'Placeholder: the cross-functional part — who you sit between.',
+    ],
+  },
+  {
+    period: '2016 – 2021',
+    role: 'Earlier role (placeholder)',
+    org: 'Company (placeholder)',
+    location: 'City, Country',
+    notes: [
+      'Placeholder: scope in one line.',
+      'Placeholder: the thing this role taught you that you still use.',
+    ],
+  },
+  {
+    period: 'Before that',
+    role: 'Education (placeholder)',
+    org: 'Institution',
+    location: 'City, Country',
+    notes: ['Placeholder: degree / focus, one line is plenty.'],
+  },
+];
+---
+
+<Base title="Work — Andrew Snider" description="Andrew Snider's professional background — product management and building.">
+  <div class="mx-auto w-full max-w-5xl px-6 sm:px-8">
+    <PageHeader eyebrow="Work" title="Product, mostly">
+      <p class="mt-6 max-w-[46ch] leading-relaxed text-ink-soft">
+        {/* PLACEHOLDER intro line */}
+        The skimmable version. A proper CV exists — <a
+          class="underline decoration-fog underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+          href="mailto:rasnider1@gmail.com">ask</a
+        > if you need it.
+      </p>
+    </PageHeader>
+
+    <ol class="mt-16 pb-12">
+      {
+        roles.map(({ period, role, org, location, notes }) => (
+          <li class="grid border-t border-fog/40 py-9 sm:grid-cols-[9.5rem_1fr] sm:gap-x-10">
+            <p class="pt-1 text-sm text-ink-soft">{period}</p>
+            <div>
+              <h2 class="font-serif text-2xl sm:text-[1.65rem]">{role}</h2>
+              <p class="mt-1 text-sm text-ink-soft">
+                {org} &middot; {location}
+              </p>
+              <ul class="prose-quiet mt-4 max-w-[52ch] text-[0.95rem] text-ink-soft">
+                {notes.map((note) => (
+                  <li>{note}</li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Base>

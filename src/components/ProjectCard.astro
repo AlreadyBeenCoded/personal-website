@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, year, status, stack } = project.data;
+---
+
+<li data-rise>
+  <a
+    href={`/building/${project.id}`}
+    class="group block border-t border-fog/40 py-10 transition-transform duration-500 ease-out hover:-translate-y-1 sm:py-12"
+  >
+    <div class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1">
+      <h2 class="font-serif text-3xl transition-colors duration-300 group-hover:text-clay sm:text-4xl">
+        {title}
+      </h2>
+      <p class="text-sm text-ink-soft">{year} &middot; {status}</p>
+    </div>
+    <p class="mt-4 max-w-[52ch] leading-relaxed text-ink-soft">{summary}</p>
+    <p class="mt-5 text-[0.8125rem] tracking-[0.02em] text-ink-soft/80">
+      {stack.join(' · ')}
+    </p>
+  </a>
+</li>

@@ -1,0 +1,52 @@
+---
+import '@fontsource-variable/instrument-sans';
+import '@fontsource/instrument-serif';
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Andrew Snider — product manager and independent builder in Salzburg, Austria.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+    <script is:inline>
+      // Must run before first paint (hence inline + blocking): sets the
+      // time-of-day tint so the canvas never flashes the default color,
+      // and gates hero-text hiding on the visitor's motion preference.
+      (() => {
+        const h = new Date().getHours();
+        document.documentElement.dataset.daypart =
+          h >= 6 && h < 11 ? 'morning' : h >= 11 && h < 16 ? 'midday' : h >= 16 && h < 21 ? 'evening' : 'night';
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('motion-ok');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script src="../scripts/motion.ts"></script>
+  </body>
+</html>

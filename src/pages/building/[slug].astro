@@ -1,0 +1,49 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, summary, year, status, stack, link } = project.data;
+const { Content } = await render(project);
+---
+
+<Base title={`${title} — Andrew Snider`} description={summary}>
+  <article class="mx-auto w-full max-w-5xl px-6 sm:px-8">
+    <PageHeader eyebrow="Building" title={title}>
+      <p class="mt-5 text-sm text-ink-soft">
+        {year} &middot; {status} &middot; {stack.join(' · ')}
+        {
+          link && (
+            <>
+              &middot;{' '}
+              <a
+                class="underline decoration-fog underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+                href={link}
+              >
+                visit
+              </a>
+            </>
+          )
+        }
+      </p>
+    </PageHeader>
+    <div class="prose-quiet mt-14 max-w-[62ch]">
+      <Content />
+    </div>
+    <p class="mt-20 pb-12">
+      <a
+        class="text-sm text-ink-soft underline decoration-fog underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+        href="/building">&larr; All projects</a
+      >
+    </p>
+  </article>
+</Base>

@@ -1,0 +1,182 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Tailwind v4 reads these from CSS (no tailwind.config.js)
+ * and generates utilities like text-ink, bg-clay, font-serif from them.
+ */
+@theme {
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+
+  /* Warm neutrals */
+  --color-ink: #29251f; /* warm near-black, never pure #000 */
+  --color-ink-soft: #6f675c; /* secondary text */
+  --color-bone: #f4f1ea;
+
+  /* Muted earth tones */
+  --color-clay: #a97155;
+  --color-sage: #8f9b84;
+  --color-fog: #b7b0a4;
+
+  /* The one restrained accent — muted persimmon (kaki) */
+  --color-kaki: #b3532f;
+
+  /* Card surface: a half-step lighter than the canvas */
+  --color-paper: #faf8f2;
+}
+
+/*
+ * Time-of-day canvas. The daypart attribute is set on <html> before first
+ * paint (inline script in the layout head), so there is no color flash.
+ * The shifts are deliberately near-invisible: warmer at the day's edges,
+ * cooler and flatter at midday.
+ */
+:root {
+  --canvas: #f4f1ea;
+}
+[data-daypart='morning'] {
+  --canvas: #f5f1e8;
+}
+[data-daypart='midday'] {
+  --canvas: #f3f2ee;
+}
+[data-daypart='evening'] {
+  --canvas: #f6efe3;
+}
+[data-daypart='night'] {
+  --canvas: #f0ece3;
+}
+
+body {
+  background-color: var(--canvas);
+  transition: background-color 1500ms ease;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Film grain: an inline SVG turbulence texture, desaturated, tiled.
+ * Costs ~300 bytes and zero requests. Static per the brief.
+ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/*
+ * Motion gate. The layout head adds .motion-ok to <html> only when the
+ * visitor has no reduced-motion preference, so hero text is hidden
+ * pre-animation *exclusively* for people who will actually see the
+ * animation. No JS, or reduced motion → text is simply there.
+ * The media query below is a second belt in case the preference changes
+ * between page loads.
+ */
+html.motion-ok [data-hero-line],
+html.motion-ok [data-hero-rest],
+html.motion-ok [data-rise] {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ok [data-hero-line],
+  html.motion-ok [data-hero-rest],
+  html.motion-ok [data-rise] {
+    visibility: visible;
+  }
+}
+
+/*
+ * Quiet prose for MDX content (/now, later the case studies).
+ * h2 renders as a small tracked label rather than a big heading — on
+ * content pages the serif h1 carries the weight and everything below
+ * stays calm. List markers are short clay ticks instead of bullets.
+ */
+.prose-quiet h2 {
+  margin-top: 3.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+.prose-quiet h2:first-child {
+  margin-top: 0;
+}
+.prose-quiet p,
+.prose-quiet li {
+  line-height: 1.75;
+}
+.prose-quiet p {
+  margin-top: 1rem;
+}
+.prose-quiet ul {
+  margin-top: 1rem;
+}
+.prose-quiet li {
+  position: relative;
+  padding-left: 1.375rem;
+  margin-top: 0.625rem;
+}
+.prose-quiet li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 0.5rem;
+  height: 1px;
+  background: var(--color-clay);
+}
+/* Ordered lists (recipe steps) get small clay numbers instead of ticks —
+   Tailwind's preflight strips native list numbering, so it's rebuilt here. */
+.prose-quiet ol {
+  margin-top: 1rem;
+  counter-reset: step;
+}
+.prose-quiet ol li {
+  counter-increment: step;
+}
+.prose-quiet ol li::before {
+  content: counter(step);
+  top: 0.2em;
+  width: auto;
+  height: auto;
+  background: none;
+  font-size: 0.8125rem;
+  color: var(--color-clay);
+}
+.prose-quiet a {
+  text-decoration: underline;
+  text-decoration-color: var(--color-fog);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 300ms ease;
+}
+.prose-quiet a:hover {
+  text-decoration-color: var(--color-kaki);
+}
+
+/* Keyboard-only skip link */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.5rem 0.875rem;
+  background: var(--color-ink);
+  color: var(--canvas);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  transform: translateY(-250%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+::selection {
+  background: var(--color-clay);
+  color: var(--canvas);
+}

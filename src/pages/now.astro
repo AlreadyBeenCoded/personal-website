@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import NowContent, { frontmatter } from '../content/now.mdx';
+
+const updated = new Date(frontmatter.updated).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Base title="Now — Andrew Snider" description="What Andrew Snider is focused on this season.">
+  <div class="mx-auto w-full max-w-5xl px-6 sm:px-8">
+    <PageHeader eyebrow="Now" title={frontmatter.season}>
+      <p class="mt-5 text-sm text-ink-soft">
+        Updated {updated} &middot; this is a <a
+          class="underline decoration-fog underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+          href="https://nownownow.com/about">now page</a>
+      </p>
+    </PageHeader>
+    <div class="prose-quiet mt-14 max-w-[62ch] pb-12">
+      <NowContent />
+    </div>
+  </div>
+</Base>
