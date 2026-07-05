@@ -12,9 +12,16 @@ Rough priority order. Items move up when their content exists.
 - **Color: SHIPPED 2026-07-05** — section-hue system (one earth tone per
   room via data-hue on body: Now=sage, Work=stone, Building=clay,
   landing/Off the clock=kaki; kaki stays the sole interaction accent) +
-  full-bleed ink-dark footer. Still open for this bullet: tinted surfaces
-  (deliberately held until images exist) and kanji annotations (Andrew's
-  call, unmade).
+  full-bleed ink-dark footer. 2026-07-05 also shipped: /now section
+  headings take their room's hue (Building=clay, At work=stone, Off the
+  clock=kaki) — /now as a color-coded index of the site; landing room
+  index under the hero (four hue-ticked rows, Now row live from now.mdx
+  frontmatter; hero 82→72svh so the first row peeks above the fold);
+  footer period follows the room hue; footer names the daypart ("Evening
+  in Eugendorf", CSS-toggled off data-daypart); hero takes Instrument
+  Serif Italic on "software by night". Still open for this bullet: tinted
+  surfaces (deliberately held until images exist) and kanji annotations
+  (Andrew's call, unmade).
 - **Texture & background: DECIDED & SHIPPED 2026-07-05.** Outcome: pure-SVG
   washi (fibre + speckle, multiply) as base + a *still* daypart-driven
   color mesh (no drift animation); options 4 (drifting grain) and 5
@@ -101,5 +108,12 @@ idea: it's ONE React island with a Rice/Coffee mode toggle.
 
 - **Dark mode** (manual toggle) — palette is CSS-vars throughout, so this is
   a variable-swap exercise; deferred until the light palette is final.
-- **Time-of-day tint** currently uses visitor's local clock — revisit if it
-  should follow Salzburg time instead (site-as-place vs visitor-comfort).
+- **Time-of-day tint: RESOLVED 2026-07-05** — switched to Salzburg time
+  (Europe/Vienna via Intl) in both the head script and motion.ts. Decided
+  by the footer daypart line: once the site says "Evening in Eugendorf",
+  the clock has to be Eugendorf's (site-as-place won).
+- **Sticky nav: decided against 2026-07-05.** Pages are too short to earn
+  it, and a pinned strip (solid or blurred) would sit over the washi
+  backdrop and re-introduce per-frame compositing. If long case studies
+  land, the version to build is a "peek-back" nav that slides in only on
+  scroll-up and stays hidden while reading.

@@ -19,8 +19,47 @@ const updated = new Date(frontmatter.updated).toLocaleDateString('en-GB', {
           href="https://nownownow.com/about">now page</a>
       </p>
     </PageHeader>
-    <div class="prose-quiet mt-14 max-w-[62ch] pb-12">
+    <div class="prose-quiet now-rooms mt-14 max-w-[62ch] pb-12">
       <NowContent />
     </div>
   </div>
 </Base>
+
+<style is:global>
+  /*
+   * /now is an index of the site's rooms, so each heading takes the hue
+   * of the section it points to (Building=clay, At work=stone, Off the
+   * clock=kaki) — color as cross-reference to the section-hue system,
+   * not decoration. Text uses the AA-safe -deep variants; the tick echoes
+   * the list-marker dash in the room's light hue. Selectors hang off the
+   * heading ids Astro derives from the MDX text, so now.mdx itself stays
+   * plain; a heading without a mapping falls back to the quiet gray.
+   * (is:global because the headings render inside the MDX component,
+   * out of reach of Astro's scoped styles.)
+   */
+  .now-rooms h2 {
+    position: relative;
+    padding-left: 1.375rem;
+  }
+  .now-rooms h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--room-tick, var(--hue));
+  }
+  .now-rooms h2#building {
+    color: var(--color-clay-deep);
+    --room-tick: var(--color-clay);
+  }
+  .now-rooms h2#at-work {
+    color: var(--color-stone-deep);
+    --room-tick: var(--color-fog);
+  }
+  .now-rooms h2#off-the-clock {
+    color: var(--color-kaki-deep);
+    --room-tick: var(--color-kaki);
+  }
+</style>

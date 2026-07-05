@@ -67,6 +67,23 @@
 }
 
 /*
+ * The footer names the daypart driving the mesh — the one legible trace
+ * of the time-of-day system. Pure CSS toggle off <html data-daypart>, so
+ * the word cross-fades pages like everything else; with JS off there is
+ * no daypart attribute and the phrase simply doesn't appear (the line
+ * still reads complete without it).
+ */
+.dp {
+  display: none;
+}
+[data-daypart='morning'] .dp-morning,
+[data-daypart='midday'] .dp-midday,
+[data-daypart='evening'] .dp-evening,
+[data-daypart='night'] .dp-night {
+  display: inline;
+}
+
+/*
  * Section hue system: each page declares its room's color via data-hue on
  * <body>; kaki remains the site-wide *interaction* accent (links, slider,
  * hovers). --hue is decorative (title periods, list ticks), --hue-text is

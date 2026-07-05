@@ -30,9 +30,14 @@ function startLenis() {
 
 // The inline head script sets this before first paint, but Astro's view
 // transitions rebuild <html> attributes from the incoming page on client-side
-// navigation, so it is re-applied on every astro:page-load.
+// navigation, so it is re-applied on every astro:page-load. Salzburg's
+// clock, matching the head script — the footer names this daypart.
 function applyDaypart() {
-  const h = new Date().getHours();
+  const h = Number(
+    new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Vienna' }).format(
+      new Date()
+    )
+  );
   document.documentElement.dataset.daypart =
     h >= 6 && h < 11 ? 'morning' : h >= 11 && h < 16 ? 'midday' : h >= 16 && h < 21 ? 'evening' : 'night';
 }

@@ -1,10 +1,76 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import { frontmatter as now } from '../content/now.mdx';
+
+const updated = new Date(now.updated).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+});
+
+/*
+ * The room index: the landing's doors. Each row carries its room's hue —
+ * the same cross-reference grammar as the /now headings — so the section
+ * color system is legible from the front door. The Now row is the only
+ * dynamic one: season + updated date come from now.mdx frontmatter, so
+ * the landing always tells the truth about how alive the site is.
+ * Notes are one-line echoes of each page's own intro, not new copy.
+ */
+const rooms = [
+  {
+    href: '/now',
+    label: 'Now',
+    tick: 'var(--color-sage)',
+    text: 'var(--color-sage-deep)',
+    note: `${now.season} — updated ${updated}`,
+  },
+  {
+    href: '/work',
+    label: 'Work',
+    tick: 'var(--color-fog)',
+    text: 'var(--color-stone-deep)',
+    note: 'Product, mostly. The skimmable version.',
+  },
+  {
+    href: '/building',
+    label: 'Building',
+    tick: 'var(--color-clay)',
+    text: 'var(--color-clay-deep)',
+    note: 'Side projects and experiments, dead ends included.',
+  },
+  {
+    href: '/off-the-clock',
+    label: 'Off the clock',
+    tick: 'var(--color-kaki)',
+    text: 'var(--color-kaki-deep)',
+    note: 'A recipe that gets cooked, bikes that get ridden, games that get finished.',
+  },
+];
 ---
 
 <Base title="Andrew Snider">
   <div class="mx-auto w-full max-w-5xl px-6 sm:px-8">
     <Hero />
+    <section aria-label="Around the site" class="pb-16">
+      <ul>
+        {
+          rooms.map(({ href, label, tick, text, note }) => (
+            <li>
+              <a
+                href={href}
+                class="group grid items-baseline gap-x-10 border-t border-fog/40 py-6 sm:grid-cols-[11rem_1fr]"
+                style={`--room:${tick};--room-text:${text}`}
+              >
+                <p class="relative pl-[1.375rem] font-medium transition-colors duration-300 group-hover:text-(--room-text)">
+                  <span aria-hidden="true" class="absolute top-1/2 left-0 h-px w-2 bg-(--room)" />
+                  {label}
+                </p>
+                <p class="mt-1 text-sm leading-relaxed text-ink-soft sm:mt-0">{note}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
   </div>
 </Base>
