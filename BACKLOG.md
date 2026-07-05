@@ -28,9 +28,22 @@ Replace every marked PLACEHOLDER:
 - Real recipe with Andrew's ratios, real bikes, real games
   (src/content/recipes/, src/pages/off-the-clock.astro)
 
-## 3. Publish on Vercel
+## 3. Two more interactive widgets (Off the clock)
+
+Same pattern as the recipe card: small React islands, `client:visible`,
+structured data in content files, hydrate only the interactive slice.
+
+- **Coffee calculator:** pick brew method + cups → coffee dose and water
+  weight from a ratio (e.g. 1:15–1:17, adjustable). One slider, one method
+  toggle, nothing more.
+- **Rice calculator:** cups/grams of rice → water amount + absorption-method
+  notes; Japanese short-grain ratios by default (ties into the cooking
+  identity). Could live beside or inside the kitchen section.
+
+## 4. Publish on Vercel
 
 - Connect AlreadyBeenCoded/personal-website to Vercel; push-to-deploy on main
+  (repo pushed 2026-07-04)
 - Custom domain (which one? — decide), HTTPS
 - Pre-launch checklist: favicon, OG image + meta tags, 404 page,
   Lighthouse pass (perf + a11y), decide repo visibility (currently private)
