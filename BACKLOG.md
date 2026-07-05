@@ -106,9 +106,23 @@ idea: it's ONE React island with a Rice/Coffee mode toggle.
   fresh .vercel.app URL has effectively zero discoverability. Remove it
   the day real content ships.
 - Custom domain (which one? — decide), HTTPS
-- Pre-launch checklist: favicon, OG image + meta tags, ~~404 page~~
-  (shipped ad9303d), Lighthouse pass (perf + a11y), decide repo
-  visibility (currently private)
+- Pre-launch checklist: ~~favicon~~ ~~OG image + meta tags~~ ~~404 page~~
+  (all shipped 2026-07-05 — favicon/OG are the kaki period-mark: SVG + PNG
+  icons, 1200×630 OG card, og/twitter/canonical tags in Base.astro; swap
+  `site` in astro.config.mjs when the domain lands), Lighthouse pass
+  (perf + a11y), decide repo visibility (currently private)
+
+## 5. Footer sun — the period mark made sundial
+
+Andrew's idea, 2026-07-05: the kaki period = the sun (hinomaru). SHIPPED:
+sundial in the footer (disc on the horizon rule, --sun-x = Salzburg
+minutes/1440 via placeSun() in motion.ts, set pre-paint on nav via
+before-swap; kaki by day, fog moon at night, keyed off data-daypart).
+NEXT — the easter egg: drag the sun to play the sky. ANDREW BUILDS IT,
+guide-style: `sun-drag-guide.md` (pointer capture → minutes → set
+data-daypart + --sun-x; slider semantics; nav-reset already free).
+Decided: fog moon at night; dragged sky holds until next page
+(no persistence — footer line must not lie); no ambient motion ever.
 
 ## Agreed earlier, still parked
 

@@ -19,6 +19,10 @@ const {
   description = 'Andrew Snider — product manager and independent builder in Salzburg, Austria.',
   hue = 'kaki',
 } = Astro.props;
+
+// Absolute URLs for scrapers (og:image must not be relative).
+const ogImage = new URL('/og/default.jpg', Astro.site);
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -29,6 +33,19 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Andrew Snider" />
+    <meta name="twitter:card" content="summary_large_image" />
     <ClientRouter />
     <script is:inline>
       // Must run before first paint (hence inline + blocking): sets the
