@@ -13,9 +13,28 @@ Rough priority order. Items move up when their content exists.
   in details. Give it more presence — e.g. tinted section surfaces, colored
   hover states, sage/clay in imagery treatment — without breaking the
   bone-quiet base.
-- **Texture:** film grain is live at 5% opacity (body::after in global.css)
-  but nearly subliminal. Tune it up and/or add a subtle paper tone to card
-  surfaces. Static only, per the brief.
+- **Texture & background:** full decision brief in
+  `background-texture-brief.md` — this is a think-through-together item,
+  and step one is Claude's honest recommendation, not implementation.
+  Current state: static grain is live at 5% opacity (`body::after` in
+  global.css). Andrew prototyped five options, most→least restrained:
+  1. Static grain (SVG noise, ~10%, multiply) — most invisible, no assets
+  2. Washi paper (directional fibres + speckle, likely one optimised image)
+  3. Faint mesh / time-of-day color wash (sage/clay/stone, pure CSS) —
+     where the existing daypart tint would live
+  4. Drifting grain — film-grain shimmer, hero only; must pin still under
+     reduced motion
+  5. Cursor-reactive glow — held in reserve; template-territory risk,
+     useless on touch
+  Andrew's leaning: base = 1 or 2, plus 3; 4 hero-only; 5 probably not.
+  Open questions he wants real push-back on: grain vs washi (and whether
+  layering both adds anything), ambient drift vs actual-local-time shift,
+  whether any cursor-reactivity is compatible with the aesthetic, and
+  whether the disciplined answer is "option 1 only".
+  Constraints: CSS/generated or one small asset; reduced-motion honored per
+  layer; contrast holds; composites under content; no template feel.
+  His working prototype (`background-textures.html`) is not in the repo yet
+  — ask him for it before starting this item.
 
 ## 2. Real content pass
 
