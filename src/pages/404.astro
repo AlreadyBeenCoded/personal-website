@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+
+/*
+ * The room that was never built. Belongs to no section, so it takes the
+ * house default (kaki) rather than a room hue, and its title period is
+ * hollow — the one page whose full stop never got filled in.
+ */
+const doors = [
+  { href: '/now', label: 'Now', note: 'what this season looks like', hue: 'var(--color-sage)' },
+  { href: '/work', label: 'Work', note: 'the day job, in roles', hue: 'var(--color-fog)' },
+  { href: '/building', label: 'Building', note: 'projects and case studies', hue: 'var(--color-clay)' },
+  { href: '/off-the-clock', label: 'Off the clock', note: 'kitchen, bikes, games', hue: 'var(--color-kaki)' },
+  { href: '/', label: 'Front door', note: 'start over', hue: 'var(--color-ink-soft)' },
+];
+---
+
+<Base title="404 — Andrew Snider" description="Nothing at this address.">
+  <div class="mx-auto w-full max-w-5xl px-6 pt-[16vh] pb-24 sm:px-8">
+    <p class="text-[0.8125rem] tracking-[0.14em] uppercase text-(--hue-text)">404 — Nothing at this address</p>
+    <h1 class="mt-4 font-serif text-[clamp(2.2rem,5vw,3.75rem)] leading-[1.06] tracking-[-0.01em]">
+      No such room<span class="period-hollow" aria-hidden="true"></span>
+    </h1>
+
+    <p class="mt-6 max-w-[52ch] leading-relaxed text-ink-soft">
+      <span data-missing-path class="font-medium text-(--hue-text)">This address</span> isn't part of the
+      house — it may have moved, or it was never built.
+    </p>
+
+    <ul class="mt-12 max-w-[52ch] space-y-3 text-[0.95rem]">
+      {
+        doors.map(({ href, label, note, hue }) => (
+          <li class="flex items-baseline gap-3.5">
+            <span class="door-tick" style={`--door: ${hue}`} aria-hidden="true" />
+            <span>
+              <a
+                href={href}
+                class="text-ink underline decoration-fog underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+              >
+                {label}
+              </a>
+              <span class="text-ink-soft"> — {note}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  /* An unfilled period. Drawn a touch larger than the serif's real full
+     stop — at true period scale the hollow center collapses to a pixel and
+     the mark reads as filled, which defeats it. Kaki outline, empty inside. */
+  .period-hollow {
+    display: inline-block;
+    width: 0.17em;
+    height: 0.17em;
+    margin-left: 0.05em;
+    border: max(1.25px, 0.03em) solid var(--hue);
+    border-radius: 50%;
+  }
+  /* Same language as the prose-quiet list ticks, but each door shows its
+     destination room's hue instead of the current page's. */
+  .door-tick {
+    width: 0.5rem;
+    height: 1px;
+    flex: none;
+    transform: translateY(-0.22em);
+    background: var(--door);
+  }
+</style>
+
+<script>
+  /*
+   * Echo the path the visitor actually asked for into the headline copy.
+   * Pure enhancement: without JS (or if formatPath declines), the generic
+   * "This address" stays. textContent only — the pathname is
+   * attacker-controlled input and must never be inserted as markup.
+   */
+  function formatPath(raw: string): string | null {
+    // TODO(Andrew): turn the raw pathname into something safe to display,
+    // or return null to keep the generic fallback. See notes in chat.
+    return null;
+  }
+
+  const target = document.querySelector('[data-missing-path]');
+  const formatted = formatPath(location.pathname);
+  if (target && formatted) target.textContent = formatted;
+</script>
