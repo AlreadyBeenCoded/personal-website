@@ -8,15 +8,25 @@ import { glob } from 'astro/loaders';
  */
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    year: z.string(),
-    status: z.enum(['live', 'in progress', 'exploring', 'retired']),
-    stack: z.array(z.string()),
-    link: z.string().url().optional(),
-    order: z.number().default(0),
-  }),
+  // image() validates the path AND routes the file through Astro's
+  // optimization pipeline. The refine makes alt text load-bearing: a
+  // cover without coverAlt fails the build, not the screen reader.
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        summary: z.string(),
+        year: z.string(),
+        status: z.enum(['live', 'in progress', 'exploring', 'retired']),
+        stack: z.array(z.string()),
+        link: z.string().url().optional(),
+        order: z.number().default(0),
+        cover: image().optional(),
+        coverAlt: z.string().optional(),
+      })
+      .refine((d) => !d.cover || !!d.coverAlt, {
+        message: 'coverAlt is required when cover is set',
+      }),
 });
 
 /*

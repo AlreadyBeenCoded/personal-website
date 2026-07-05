@@ -286,3 +286,11 @@ header nav a[aria-current='page'] {
   background: var(--color-clay);
   color: var(--canvas);
 }
+
+/*
+ * Photos get a slight warm grade so they sit *in* the bone/earth palette
+ * instead of floating on top of it as full-saturation rectangles.
+ */
+.img-warm {
+  filter: saturate(0.94) sepia(0.05);
+}
