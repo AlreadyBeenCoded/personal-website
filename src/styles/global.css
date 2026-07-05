@@ -8,21 +8,27 @@
   --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
 
+  /*
+   * Warmed 2026-07: values sit halfway between the original palette and
+   * Andrew's texture-prototype palette (background-textures.html), which
+   * he tuned warmer and deeper by eye.
+   */
+
   /* Warm neutrals */
   --color-ink: #29251f; /* warm near-black, never pure #000 */
-  --color-ink-soft: #6f675c; /* secondary text */
-  --color-bone: #f4f1ea;
+  --color-ink-soft: #675f52; /* secondary text — darkened to hold AA on the warmer canvas */
+  --color-bone: #f2ede4;
 
   /* Muted earth tones */
-  --color-clay: #a97155;
-  --color-sage: #8f9b84;
-  --color-fog: #b7b0a4;
+  --color-clay: #b17a5b;
+  --color-sage: #86937b;
+  --color-fog: #afa79a;
 
   /* The one restrained accent — muted persimmon (kaki) */
   --color-kaki: #b3532f;
 
   /* Card surface: a half-step lighter than the canvas */
-  --color-paper: #faf8f2;
+  --color-paper: #f8f4ea;
 }
 
 /*
@@ -32,19 +38,19 @@
  * cooler and flatter at midday.
  */
 :root {
-  --canvas: #f4f1ea;
+  --canvas: #f2ede4;
 }
 [data-daypart='morning'] {
-  --canvas: #f5f1e8;
+  --canvas: #f3eee0;
 }
 [data-daypart='midday'] {
-  --canvas: #f3f2ee;
+  --canvas: #f1efe8;
 }
 [data-daypart='evening'] {
-  --canvas: #f6efe3;
+  --canvas: #f3ebdb;
 }
 [data-daypart='night'] {
-  --canvas: #f0ece3;
+  --canvas: #ede8dc;
 }
 
 body {
@@ -56,9 +62,22 @@ body {
 }
 
 /*
- * Film grain: an inline SVG turbulence texture, desaturated, tiled.
- * Costs ~300 bytes and zero requests. Static per the brief.
+ * Washi paper, per background-textures.html option 02: directional fibres
+ * (the lopsided baseFrequency stretches the noise into horizontal strands)
+ * plus a fine speckle. Both inline SVG — ~700 bytes total, zero requests,
+ * static. Multiply blend lets the noise darken the warm canvas the way
+ * ink sits on paper.
  */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014 0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+}
 body::after {
   content: '';
   position: fixed;
@@ -66,7 +85,65 @@ body::after {
   z-index: 60;
   pointer-events: none;
   opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
+}
+
+/*
+ * Daypart mesh, per background-textures.html option 03 — but still, not
+ * drifting: three corner washes whose weights follow the time-of-day
+ * attribute instead of an animation. Real ambient light changes with the
+ * hour; it doesn't swirl. Because nothing moves, this layer needs no
+ * reduced-motion gate. @property registration is what lets the colors
+ * cross-fade when a daypart boundary passes (unregistered custom
+ * properties snap instead of interpolating); browsers without @property
+ * simply snap — acceptable.
+ */
+@property --mesh-a {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(134, 147, 123, 0.13);
+}
+@property --mesh-b {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(177, 122, 91, 0.11);
+}
+@property --mesh-c {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(175, 167, 154, 0.11);
+}
+.daypart-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 55% at 18% 20%, var(--mesh-a), transparent 70%),
+    radial-gradient(55% 50% at 85% 78%, var(--mesh-b), transparent 72%),
+    radial-gradient(70% 60% at 60% 45%, var(--mesh-c), transparent 75%);
+  transition:
+    --mesh-a 1500ms ease,
+    --mesh-b 1500ms ease,
+    --mesh-c 1500ms ease;
+}
+/* sage forward in the morning, flat at midday, clay blooming at dusk,
+   stone taking over at night */
+[data-daypart='midday'] .daypart-mesh {
+  --mesh-a: rgba(134, 147, 123, 0.15);
+  --mesh-b: rgba(177, 122, 91, 0.06);
+  --mesh-c: rgba(175, 167, 154, 0.13);
+}
+[data-daypart='evening'] .daypart-mesh {
+  --mesh-a: rgba(134, 147, 123, 0.09);
+  --mesh-b: rgba(177, 122, 91, 0.17);
+  --mesh-c: rgba(175, 167, 154, 0.11);
+}
+[data-daypart='night'] .daypart-mesh {
+  --mesh-a: rgba(134, 147, 123, 0.07);
+  --mesh-b: rgba(177, 122, 91, 0.09);
+  --mesh-c: rgba(175, 167, 154, 0.15);
 }
 
 /*

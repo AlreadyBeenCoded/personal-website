@@ -13,9 +13,12 @@ Rough priority order. Items move up when their content exists.
   in details. Give it more presence — e.g. tinted section surfaces, colored
   hover states, sage/clay in imagery treatment — without breaking the
   bone-quiet base.
-- **Texture & background:** full decision brief in
-  `background-texture-brief.md` — this is a think-through-together item,
-  and step one is Claude's honest recommendation, not implementation.
+- **Texture & background: DECIDED & SHIPPED 2026-07-05.** Outcome: pure-SVG
+  washi (fibre + speckle, multiply) as base + a *still* daypart-driven
+  color mesh (no drift animation); options 4 (drifting grain) and 5
+  (cursor glow) cut entirely; palette warmed halfway toward the prototype
+  (ink-soft darkened to hold AA). Decision record follows for reference.
+  Original brief in `background-texture-brief.md`.
   Current state: static grain is live at 5% opacity (`body::after` in
   global.css). Andrew prototyped five options, most→least restrained:
   1. Static grain (SVG noise, ~10%, multiply) — most invisible, no assets

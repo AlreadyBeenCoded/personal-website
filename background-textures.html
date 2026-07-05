@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Background textures — comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bone:#efe9de;
+    --bone-warm:#ece4d6;
+    --ink:#2c2823;
+    --muted:#6b6459;
+    --sage:#7e8b72;
+    --clay:#b98462;
+    --stone:#a79e90;
+    --line:rgba(44,40,35,0.12);
+    --card:rgba(243,238,229,0.86);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--bone);
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---- intro ---- */
+  .intro{
+    padding:15vh 8vw 9vh;
+    max-width:720px;
+  }
+  .eyebrow{
+    font-family:"Zen Kurenaido",serif;
+    font-size:.72rem;
+    letter-spacing:.42em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:1.6rem;
+  }
+  .intro h1{
+    font-weight:300;
+    font-size:clamp(2rem,6vw,3.1rem);
+    line-height:1.12;
+    letter-spacing:-.01em;
+    margin-bottom:1.4rem;
+  }
+  .intro p{
+    color:var(--muted);
+    font-size:1.02rem;
+    line-height:1.7;
+    max-width:46ch;
+  }
+
+  /* ---- panels ---- */
+  .panel{
+    position:relative;
+    min-height:74vh;
+    display:flex;
+    align-items:flex-end;
+    padding:6vw;
+    overflow:hidden;
+    background:var(--bone);
+    border-top:1px solid var(--line);
+    isolation:isolate;
+  }
+  .tex{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  /* 1 — static grain */
+  .p-grain .tex{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity:.10;
+    mix-blend-mode:multiply;
+  }
+
+  /* 2 — washi / paper */
+  .p-washi{background:var(--bone-warm)}
+  .p-washi .tex.fiber{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014 0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+    opacity:.11;
+    mix-blend-mode:multiply;
+  }
+  .p-washi .tex.speck{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
+    opacity:.05;
+    mix-blend-mode:multiply;
+  }
+
+  /* 3 — faint mesh / time-of-day */
+  .p-mesh .tex{
+    background:
+      radial-gradient(60% 55% at 18% 20%, rgba(126,139,114,0.22), transparent 70%),
+      radial-gradient(55% 50% at 85% 78%, rgba(185,132,98,0.18), transparent 72%),
+      radial-gradient(70% 60% at 60% 45%, rgba(167,158,144,0.16), transparent 75%);
+    animation:drift 42s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0) scale(1)}
+    100%{transform:translate3d(-3%,2%,0) scale(1.08)}
+  }
+
+  /* 4 — drifting grain */
+  .p-move .tex{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+    opacity:.09;
+    mix-blend-mode:multiply;
+    animation:grainshift 1.1s steps(6) infinite;
+  }
+  @keyframes grainshift{
+    0%{background-position:0 0}
+    25%{background-position:-40px 30px}
+    50%{background-position:30px -50px}
+    75%{background-position:-30px -20px}
+    100%{background-position:40px 40px}
+  }
+
+  /* 5 — cursor reactive */
+  .p-cursor .tex.base{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+    opacity:.08;
+    mix-blend-mode:multiply;
+  }
+  .p-cursor .tex.glow{
+    background:radial-gradient(280px circle at var(--x,50%) var(--y,40%), rgba(126,139,114,0.30), transparent 65%);
+    transition:background .18s ease-out;
+  }
+
+  /* ---- caption ---- */
+  .cap{
+    position:relative;
+    z-index:2;
+    background:var(--card);
+    backdrop-filter:blur(3px);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:1.5rem 1.7rem;
+    max-width:390px;
+  }
+  .cap .n{
+    font-family:"Zen Kurenaido",serif;
+    font-size:.7rem;
+    letter-spacing:.4em;
+    color:var(--muted);
+    display:block;
+    margin-bottom:.7rem;
+  }
+  .cap h2{
+    font-weight:400;
+    font-size:1.28rem;
+    letter-spacing:-.01em;
+    margin-bottom:.55rem;
+  }
+  .cap p{
+    color:var(--muted);
+    font-size:.92rem;
+    line-height:1.62;
+    margin-bottom:.9rem;
+  }
+  .cap .how{
+    font-family:"Zen Kurenaido",serif;
+    font-size:.78rem;
+    letter-spacing:.02em;
+    color:var(--sage);
+    line-height:1.5;
+    padding-top:.75rem;
+    border-top:1px solid var(--line);
+  }
+  .cap .how b{font-weight:400;color:var(--muted)}
+
+  footer{
+    padding:8vh 8vw 12vh;
+    max-width:640px;
+    color:var(--muted);
+    font-size:.9rem;
+    line-height:1.7;
+    border-top:1px solid var(--line);
+  }
+  footer .eyebrow{margin-bottom:1.2rem}
+
+  @media (prefers-reduced-motion:reduce){
+    .p-mesh .tex,.p-move .tex{animation:none}
+  }
+  @media (max-width:640px){
+    .panel{min-height:66vh;align-items:flex-end}
+    .cap{max-width:100%}
+  }
+</style>
+</head>
+<body>
+
+  <section class="intro">
+    <span class="eyebrow">Background · texture study</span>
+    <h1>Five ways to warm the page.</h1>
+    <p>Each option shown against your bone base with sage, clay and stone. They're tuned to a realistic ship-level subtlety — quiet on purpose. Scroll to compare, and note how the last one behaves differently when you're not touching it.</p>
+  </section>
+
+  <section class="panel p-grain">
+    <div class="tex"></div>
+    <div class="cap">
+      <span class="n">01</span>
+      <h2>Static grain</h2>
+      <p>A faint monochrome noise layer. Kills the flat-digital-white feeling and reads as paper. The most on-brand, most invisible option.</p>
+      <div class="how"><b>How</b> — inline SVG <i>feTurbulence</i>, ~10% opacity, multiply blend. No image files, negligible weight.</div>
+    </div>
+  </section>
+
+  <section class="panel p-washi">
+    <div class="tex fiber"></div>
+    <div class="tex speck"></div>
+    <div class="cap">
+      <span class="n">02</span>
+      <h2>Washi paper</h2>
+      <p>Directional fibres plus a fine speckle, on a warmer bone. A quiet Japanese nod with a touch more character than pure noise.</p>
+      <div class="how"><b>How</b> — approximated here with SVG; on the real site, swap in one optimised paper texture for true fibre detail.</div>
+    </div>
+  </section>
+
+  <section class="panel p-mesh">
+    <div class="tex"></div>
+    <div class="cap">
+      <span class="n">03</span>
+      <h2>Faint mesh · time-of-day</h2>
+      <p>A barely-there wash — sage in one corner, clay in another, stone through the middle. Drifts so slowly it feels like ambient light, not an effect. This is where your day-to-dusk palette shift lives.</p>
+      <div class="how"><b>How</b> — pure CSS radial gradients + a 40s drift. No JS. Reduced-motion pins it still.</div>
+    </div>
+  </section>
+
+  <section class="panel p-move">
+    <div class="tex"></div>
+    <div class="cap">
+      <span class="n">04</span>
+      <h2>Drifting grain</h2>
+      <p>The same noise as 01, shimmering film-grain style. Adds life without motion you'd consciously track. The most it should ever move.</p>
+      <div class="how"><b>How</b> — stepped background-position animation. <b>Must</b> be gated behind reduced-motion.</div>
+    </div>
+  </section>
+
+  <section class="panel p-cursor" id="cursor">
+    <div class="tex base"></div>
+    <div class="tex glow" id="glow"></div>
+    <div class="cap">
+      <span class="n">05</span>
+      <h2>Cursor-reactive glow</h2>
+      <p>A soft sage light that follows the pointer. Move your cursor across this panel. This is the "interactive background" tier — and the first thing that can tip minimalism into template territory.</p>
+      <div class="how"><b>How</b> — JS updates two CSS vars; a radial gradient tracks them. Fades to still on touch devices.</div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="eyebrow">Recommendation</span>
+    <p>My honest pick: <b style="color:var(--ink);font-weight:400">01 or 02 as the base, plus 03 for the time-of-day shift</b> — three layers that all whisper. I'd keep 04 for the hero only, and hold 05 in reserve rather than running it site-wide. Every option here already respects <i>prefers-reduced-motion</i>.</p>
+  </footer>
+
+<script>
+  (function(){
+    var panel=document.getElementById('cursor');
+    var glow=document.getElementById('glow');
+    if(window.matchMedia('(pointer:fine)').matches){
+      panel.addEventListener('pointermove',function(e){
+        var r=panel.getBoundingClientRect();
+        var x=((e.clientX-r.left)/r.width*100).toFixed(1);
+        var y=((e.clientY-r.top)/r.height*100).toFixed(1);
+        glow.style.setProperty('--x',x+'%');
+        glow.style.setProperty('--y',y+'%');
+      });
+    }
+  })();
+</script>
+</body>
+</html>
