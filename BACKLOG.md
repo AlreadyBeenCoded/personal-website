@@ -47,17 +47,42 @@ Replace every marked PLACEHOLDER:
 - Real recipe with Andrew's ratios, real bikes, real games
   (src/content/recipes/, src/pages/off-the-clock.astro)
 
-## 3. Two more interactive widgets (Off the clock)
+## 3. Recipe calculator widget (rice + coffee solver)
 
-Same pattern as the recipe card: small React islands, `client:visible`,
-structured data in content files, hydrate only the interactive slice.
+Full brief in `recipe-calculator-brief.md` — spec *and* invitation: step one
+is Claude's read on the open questions + a component-structure proposal,
+then sign-off, then build. Supersedes the earlier "two separate widgets"
+idea: it's ONE React island with a Rice/Coffee mode toggle.
 
-- **Coffee calculator:** pick brew method + cups → coffee dose and water
-  weight from a ratio (e.g. 1:15–1:17, adjustable). One slider, one method
-  toggle, nothing more.
-- **Rice calculator:** cups/grams of rice → water amount + absorption-method
-  notes; Japanese short-grain ratios by default (ties into the cooking
-  identity). Could live beside or inside the kitchen section.
+- **Dual home:** Off the clock as a tool Andrew actually uses; Building as
+  a portfolio case study.
+- **Model:** a solver, not a form — fix one known quantity, everything else
+  recomputes live (no Calculate button, single live result panel).
+- **Rice mode:** short-grain white / sushi / brown; input in 合 (gō ≈180 ml
+  ≈150 g) / g / cups with live conversion; firmer↔softer slider nudging
+  ratio within a band (white ~1:1.1–1.2 by volume, brown ~1:1.5–2);
+  rinse/soak options; outputs water + soak/cook/rest times.
+- **Coffee mode:** V60 / French press / AeroPress / espresso; strength
+  slider within method's ratio band (V60 ~1:15–16 @92–96°C, FP ~1:12–15
+  coarse ~4 min, AeroPress ~1:13–16, espresso ~1:2 ~25–30 s); ONE known
+  quantity (cups | water | dose) → other two computed; outputs dose, water,
+  grind label, temp, bloom, brew time.
+- **Tech:** one Astro island, `client:visible`, fully client-side, Tailwind
+  matching the site system; localStorage (or nanostores) persistence of
+  last settings.
+- **Open questions Andrew wants real input on:** is fix-one-solve-rest right
+  for coffee's three interrelated quantities; better-calibrated domain
+  numbers (he'd rather trust the values than keep his draft); v1 scope of
+  rice types/methods; single result panel vs inline results; anything
+  missing for kitchen usefulness or portfolio impressiveness.
+- **v1 defaults (proposed, open):** V60 + short-grain white. Build order:
+  recommendation → structure proposal → sign-off → v1 → persistence →
+  motion polish. Non-negotiables: no generic-calculator feel, live updates,
+  accessible/responsive, trustworthy rounding and units.
+- **Later, not v1:** more grains/methods, named presets, remembered
+  metric⇄imperial.
+- Brief §10 ("Notes for me") is still blank — Andrew's own defaults and
+  taste-locked ratios; ask before building.
 
 ## 4. Publish on Vercel
 
