@@ -28,19 +28,52 @@ function startLenis() {
   lenis.on('scroll', ScrollTrigger.update);
 }
 
-// The inline head script sets this before first paint, but Astro's view
-// transitions rebuild <html> attributes from the incoming page on client-side
-// navigation, so it is re-applied on every astro:page-load. Salzburg's
-// clock, matching the head script — the footer names this daypart.
-function applyDaypart() {
-  const h = Number(
-    new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Vienna' }).format(
-      new Date()
-    )
-  );
-  document.documentElement.dataset.daypart =
-    h >= 6 && h < 11 ? 'morning' : h >= 11 && h < 16 ? 'midday' : h >= 16 && h < 21 ? 'evening' : 'night';
+// Salzburg's clock, matching the head script — the footer names this daypart.
+function salzburgTime() {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hourCycle: 'h23',
+    timeZone: 'Europe/Vienna',
+  }).formatToParts(new Date());
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  return { hour: get('hour'), minute: get('minute') };
 }
+
+function daypart() {
+  const h = salzburgTime().hour;
+  return h >= 6 && h < 11 ? 'morning' : h >= 11 && h < 16 ? 'midday' : h >= 16 && h < 21 ? 'evening' : 'night';
+}
+
+// The footer sundial: minutes-since-midnight mapped linearly onto the
+// track. Runs against a given root so before-swap can place the sun on
+// the incoming document before it paints (same trick as the daypart).
+function placeSun(root: Document = document) {
+  const track = root.querySelector<HTMLElement>('[data-sun]');
+  if (!track) return;
+  const { hour, minute } = salzburgTime();
+  track.style.setProperty('--sun-x', `${(((hour * 60 + minute) / 1440) * 100).toFixed(2)}%`);
+}
+
+// The inline head script sets this before first paint on hard loads;
+// astro:page-load re-applies it as a belt after client-side navigation.
+function applyDaypart() {
+  document.documentElement.dataset.daypart = daypart();
+}
+
+// View transitions rebuild <html> attributes from the incoming page's
+// static HTML, which never carries the JS-applied state: data-daypart and
+// .motion-ok would vanish between the swap painting and astro:page-load
+// firing — the canvas fades default→daypart (body's 1500ms transition
+// animating a change that isn't one) and the hero can flash unhidden
+// before its reveal replays. Settle both on the incoming document BEFORE
+// it paints.
+document.addEventListener('astro:before-swap', (e) => {
+  const doc = (e as Event & { newDocument: Document }).newDocument;
+  doc.documentElement.dataset.daypart = daypart();
+  doc.documentElement.classList.toggle('motion-ok', !reduceMotion());
+  placeSun(doc);
+});
 
 function revealHero() {
   const line = document.querySelector<HTMLElement>('[data-hero-line]');
@@ -96,6 +129,7 @@ document.addEventListener('astro:page-load', () => {
   // Triggers from the previous page point at DOM that no longer exists.
   ScrollTrigger.getAll().forEach((t) => t.kill());
   applyDaypart();
+  placeSun();
   startLenis();
   revealHero();
   riseOnScroll();

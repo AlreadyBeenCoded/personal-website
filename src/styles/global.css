@@ -84,6 +84,43 @@
 }
 
 /*
+ * The footer sundial. --sun-x is Salzburg's clock mapped linearly onto
+ * the track (00:00 left, 23:59 right; set from motion.ts). The disc is
+ * the site's period mark placed by the actual sky: kaki sun by day and
+ * evening, fog moon at night — color keys off data-daypart, so when the
+ * drag interaction ships, everything (disc, canvas, mesh, footer word)
+ * follows the one attribute. The left/background transitions exist FOR
+ * that drag: position eases between nudges, the moonrise cross-fades.
+ */
+.sun-track {
+  position: relative;
+  height: 1px;
+  margin-bottom: 3.5rem;
+  background: color-mix(in srgb, var(--color-bone) 22%, transparent);
+}
+.sun {
+  position: absolute;
+  top: 50%;
+  left: var(--sun-x, 50%);
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: var(--color-kaki);
+  transition:
+    background-color 1500ms ease,
+    left 300ms ease;
+}
+[data-daypart='night'] .sun {
+  background: var(--color-fog);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sun {
+    transition: none;
+  }
+}
+
+/*
  * Section hue system: each page declares its room's color via data-hue on
  * <body>; kaki remains the site-wide *interaction* accent (links, slider,
  * hovers). --hue is decorative (title periods, list ticks), --hue-text is

@@ -9,6 +9,13 @@
 
 <footer class="mt-24 bg-ink text-bone">
   <div class="mx-auto w-full max-w-5xl px-6 py-14 sm:px-8 sm:py-16">
+    {/* The sundial: a disc on the horizon rule, placed by Salzburg's
+        clock (motion.ts sets --sun-x; color follows data-daypart in CSS —
+        kaki sun by day, fog moon at night). Decorative until the drag
+        interaction ships (sun-drag-guide.md), then it becomes a slider. */}
+    <div class="sun-track" data-sun aria-hidden="true">
+      <span class="sun"></span>
+    </div>
     {/* The period follows the room hue (light variant — the -deep forms
         vanish on ink), so every period on a page agrees about where you are. */}
     <p class="font-serif text-2xl">Andrew Snider<span class="text-(--hue)">.</span></p>
