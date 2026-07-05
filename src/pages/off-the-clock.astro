@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import RecipeCard from '../components/islands/RecipeCard.tsx';
+import RiceCalculator from '../components/islands/recipes/rice/RiceCard.tsx';
 
 const [recipe] = await getCollection('recipes');
 const { Content: Method } = await render(recipe);
@@ -55,6 +56,16 @@ const sectionLabel = 'text-[0.8125rem] font-medium tracking-[0.14em] uppercase t
         </div>
         <div class="prose-quiet max-w-[52ch] text-[0.95rem] sm:pt-1">
           <Method />
+        </div>
+      </div>
+
+      <div class="mt-6 border border-fog/50 bg-paper p-7 sm:p-10" data-rise>
+        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h3 class="font-serif text-3xl">Rice, solved</h3>
+          <p class="text-sm text-ink-soft">pick the rice, everything else is computed</p>
+        </div>
+        <div class="mt-9">
+          <RiceCalculator client:visible />
         </div>
       </div>
     </section>
