@@ -27,8 +27,21 @@
   /* The one restrained accent — muted persimmon (kaki) */
   --color-kaki: #b3532f;
 
-  /* Card surface: a half-step lighter than the canvas */
-  --color-paper: #f8f4ea;
+  /*
+   * Text-safe darkened variants of each hue: the light values fail AA as
+   * small text on the bone canvas, so anything readable (eyebrows, step
+   * numbers) uses the -deep form while decorative marks use the light one.
+   */
+  --color-sage-deep: #5e6b54;
+  --color-clay-deep: #8a5a3d;
+  --color-stone-deep: #6c6557;
+  --color-kaki-deep: #9c4426;
+
+  /* Card surface: a half-step lighter than the canvas, slightly
+     translucent so the backdrop's washi ghosts through instead of the
+     card sitting as a flat untextured patch (texture now lives under
+     the content, not over it) */
+  --color-paper: rgb(248 244 234 / 0.85);
 }
 
 /*
@@ -53,6 +66,29 @@
   --canvas: #ede8dc;
 }
 
+/*
+ * Section hue system: each page declares its room's color via data-hue on
+ * <body>; kaki remains the site-wide *interaction* accent (links, slider,
+ * hovers). --hue is decorative (title periods, list ticks), --hue-text is
+ * the AA-safe variant for small readable text.
+ */
+:root {
+  --hue: var(--color-kaki);
+  --hue-text: var(--color-kaki-deep);
+}
+body[data-hue='sage'] {
+  --hue: var(--color-sage);
+  --hue-text: var(--color-sage-deep);
+}
+body[data-hue='clay'] {
+  --hue: var(--color-clay);
+  --hue-text: var(--color-clay-deep);
+}
+body[data-hue='stone'] {
+  --hue: var(--color-fog);
+  --hue-text: var(--color-stone-deep);
+}
+
 body {
   background-color: var(--canvas);
   transition: background-color 1500ms ease;
@@ -62,42 +98,22 @@ body {
 }
 
 /*
- * Washi paper, per background-textures.html option 02: directional fibres
- * (the lopsided baseFrequency stretches the noise into horizontal strands)
- * plus a fine speckle. Both inline SVG — ~700 bytes total, zero requests,
- * static. Multiply blend lets the noise darken the warm canvas the way
- * ink sits on paper.
- */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.1;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014 0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
-}
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
-}
-
-/*
- * Daypart mesh, per background-textures.html option 03 — but still, not
- * drifting: three corner washes whose weights follow the time-of-day
- * attribute instead of an animation. Real ambient light changes with the
- * hour; it doesn't swirl. Because nothing moves, this layer needs no
- * reduced-motion gate. @property registration is what lets the colors
- * cross-fade when a daypart boundary passes (unregistered custom
- * properties snap instead of interpolating); browsers without @property
- * simply snap — acceptable.
+ * The backdrop: canvas + washi paper + daypart mesh collapsed into ONE
+ * static element under the content. The previous structure (two fixed
+ * mix-blend-mode layers OVER the page) forced the browser to re-blend
+ * viewport-sized textures against moving content on every scrolled frame
+ * — the scroll-performance regression Andrew felt. background-blend-mode
+ * blends only within this element's own background stack, so the
+ * compositor paints the whole ambience once, caches it, and scrolling
+ * just slides content over a finished painting.
+ *
+ * Layer order (top→bottom): washi fibres, speckle (both multiply, their
+ * opacity baked into the SVG rects), three daypart corner washes, canvas
+ * color. The mesh is still, not drifting: weights follow data-daypart, so
+ * there is no animation and no reduced-motion gate needed. @property is
+ * what lets the wash colors cross-fade when a daypart boundary passes
+ * (unregistered custom properties snap instead of interpolating);
+ * browsers without @property simply snap — acceptable.
  */
 @property --mesh-a {
   syntax: '<color>';
@@ -114,33 +130,38 @@ body::after {
   inherits: true;
   initial-value: rgba(175, 167, 154, 0.11);
 }
-.daypart-mesh {
+.backdrop {
   position: fixed;
   inset: 0;
   z-index: -10;
   pointer-events: none;
-  background:
+  background-color: var(--canvas);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014 0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='0.1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)' opacity='0.05'/%3E%3C/svg%3E"),
     radial-gradient(60% 55% at 18% 20%, var(--mesh-a), transparent 70%),
     radial-gradient(55% 50% at 85% 78%, var(--mesh-b), transparent 72%),
     radial-gradient(70% 60% at 60% 45%, var(--mesh-c), transparent 75%);
+  background-blend-mode: multiply, multiply, normal, normal, normal;
   transition:
+    background-color 1500ms ease,
     --mesh-a 1500ms ease,
     --mesh-b 1500ms ease,
     --mesh-c 1500ms ease;
 }
 /* sage forward in the morning, flat at midday, clay blooming at dusk,
    stone taking over at night */
-[data-daypart='midday'] .daypart-mesh {
+[data-daypart='midday'] .backdrop {
   --mesh-a: rgba(134, 147, 123, 0.15);
   --mesh-b: rgba(177, 122, 91, 0.06);
   --mesh-c: rgba(175, 167, 154, 0.13);
 }
-[data-daypart='evening'] .daypart-mesh {
+[data-daypart='evening'] .backdrop {
   --mesh-a: rgba(134, 147, 123, 0.09);
   --mesh-b: rgba(177, 122, 91, 0.17);
   --mesh-c: rgba(175, 167, 154, 0.11);
 }
-[data-daypart='night'] .daypart-mesh {
+[data-daypart='night'] .backdrop {
   --mesh-a: rgba(134, 147, 123, 0.07);
   --mesh-b: rgba(177, 122, 91, 0.09);
   --mesh-c: rgba(175, 167, 154, 0.15);
@@ -206,7 +227,7 @@ html.motion-ok [data-rise] {
   top: 0.85em;
   width: 0.5rem;
   height: 1px;
-  background: var(--color-clay);
+  background: var(--hue);
 }
 /* Ordered lists (recipe steps) get small clay numbers instead of ticks —
    Tailwind's preflight strips native list numbering, so it's rebuilt here. */
@@ -224,7 +245,15 @@ html.motion-ok [data-rise] {
   height: auto;
   background: none;
   font-size: 0.8125rem;
-  color: var(--color-clay);
+  color: var(--hue-text);
+}
+
+/* Current page marker in the nav takes the room's hue as an underline */
+header nav a[aria-current='page'] {
+  text-decoration: underline;
+  text-decoration-color: var(--hue);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 6px;
 }
 .prose-quiet a {
   text-decoration: underline;

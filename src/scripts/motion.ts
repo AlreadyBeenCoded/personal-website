@@ -19,7 +19,11 @@ function startLenis() {
   if (reduceMotion()) return;
   // Touch devices keep native momentum scrolling (Lenis default);
   // smoothing only applies to wheel input.
-  lenis = new Lenis({ autoRaf: true });
+  // lerp: each frame closes this fraction of the gap to the wheel target.
+  // Default 0.1 takes ~400ms to catch up to a flick and reads as lag;
+  // 0.22 keeps the weighted feel but roughly halves the latency. This is
+  // THE knob for smooth-vs-responsive — tune to taste.
+  lenis = new Lenis({ autoRaf: true, lerp: 0.22 });
   // Keep ScrollTrigger's measurements in sync with Lenis-driven scrolling.
   lenis.on('scroll', ScrollTrigger.update);
 }

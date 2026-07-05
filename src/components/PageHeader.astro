@@ -8,9 +8,9 @@ const { eyebrow, title } = Astro.props;
 ---
 
 <header class="pt-16 sm:pt-24">
-  <p class="text-[0.8125rem] tracking-[0.14em] uppercase text-ink-soft">{eyebrow}</p>
+  <p class="text-[0.8125rem] tracking-[0.14em] uppercase text-(--hue-text)">{eyebrow}</p>
   <h1 class="mt-4 font-serif text-[clamp(2.2rem,5vw,3.75rem)] leading-[1.06] tracking-[-0.01em]">
-    {title}<span class="text-kaki">.</span>
+    {title}<span class="text-(--hue)">.</span>
   </h1>
   <slot />
 </header>

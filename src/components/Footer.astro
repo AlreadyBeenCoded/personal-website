@@ -1,3 +1,28 @@
-<footer class="mx-auto w-full max-w-5xl px-6 pb-10 pt-24 text-sm text-ink-soft sm:px-8">
-  <p>&copy; 2026 Andrew Snider &middot; Built slowly in Austria</p>
+---
+/*
+ * The site's one dark block: a full-bleed ink band that grounds the pale
+ * canvas above it. The washi texture lives in the backdrop *under* the
+ * content now (scroll-performance fix), so this band is deliberately
+ * smooth — ink, not paper.
+ */
+---
+
+<footer class="mt-24 bg-ink text-bone">
+  <div class="mx-auto w-full max-w-5xl px-6 py-14 sm:px-8 sm:py-16">
+    <p class="font-serif text-2xl">Andrew Snider<span class="text-kaki">.</span></p>
+    <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-sm text-bone/70">
+      <p>&copy; 2026 &middot; Built slowly in Austria</p>
+      <p>
+        <a
+          class="underline decoration-bone/30 underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+          href="mailto:rasnider1@gmail.com">rasnider1@gmail.com</a
+        >
+        &middot;
+        <a
+          class="underline decoration-bone/30 underline-offset-3 transition-colors duration-300 hover:decoration-kaki"
+          href="https://github.com/AlreadyBeenCoded">GitHub</a
+        >
+      </p>
+    </div>
+  </div>
 </footer>

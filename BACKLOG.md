@@ -9,10 +9,12 @@ Rough priority order. Items move up when their content exists.
   project screenshots for the Building case studies, bikes, possibly a small
   landing portrait. Needs Andrew's photos — treat, don't decorate: few,
   well-placed, lazy-loaded.
-- **Color:** the palette exists (clay / sage / fog / kaki) but mostly shows up
-  in details. Give it more presence — e.g. tinted section surfaces, colored
-  hover states, sage/clay in imagery treatment — without breaking the
-  bone-quiet base.
+- **Color: SHIPPED 2026-07-05** — section-hue system (one earth tone per
+  room via data-hue on body: Now=sage, Work=stone, Building=clay,
+  landing/Off the clock=kaki; kaki stays the sole interaction accent) +
+  full-bleed ink-dark footer. Still open for this bullet: tinted surfaces
+  (deliberately held until images exist) and kanji annotations (Andrew's
+  call, unmade).
 - **Texture & background: DECIDED & SHIPPED 2026-07-05.** Outcome: pure-SVG
   washi (fibre + speckle, multiply) as base + a *still* daypart-driven
   color mesh (no drift animation); options 4 (drifting grain) and 5

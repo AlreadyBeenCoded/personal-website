@@ -9,11 +9,14 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  /** Section hue: which room of the site this page belongs to. */
+  hue?: 'kaki' | 'sage' | 'clay' | 'stone';
 }
 
 const {
   title,
   description = 'Andrew Snider — product manager and independent builder in Salzburg, Austria.',
+  hue = 'kaki',
 } = Astro.props;
 ---
 
@@ -40,11 +43,11 @@ const {
       })();
     </script>
   </head>
-  <body>
-    <div class="daypart-mesh" aria-hidden="true"></div>
+  <body data-hue={hue} class="flex min-h-svh flex-col">
+    <div class="backdrop" aria-hidden="true"></div>
     <a class="skip-link" href="#main">Skip to content</a>
     <Nav />
-    <main id="main">
+    <main id="main" class="flex-1">
       <slot />
     </main>
     <Footer />
