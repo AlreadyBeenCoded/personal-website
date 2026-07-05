@@ -98,11 +98,17 @@ idea: it's ONE React island with a Rice/Coffee mode toggle.
 
 ## 4. Publish on Vercel
 
-- Connect AlreadyBeenCoded/personal-website to Vercel; push-to-deploy on main
-  (repo pushed 2026-07-04)
+- **DEPLOYED 2026-07-05** — push-to-deploy on main is live; site is public
+  on the .vercel.app domain with placeholder content throughout, which
+  makes the real content pass (item 2) the launch blocker, not the infra.
+- Consider `noindex` meta until the content pass lands (production
+  .vercel.app deploys ARE indexable; previews are not) — or accept that a
+  fresh .vercel.app URL has effectively zero discoverability. Remove it
+  the day real content ships.
 - Custom domain (which one? — decide), HTTPS
-- Pre-launch checklist: favicon, OG image + meta tags, 404 page,
-  Lighthouse pass (perf + a11y), decide repo visibility (currently private)
+- Pre-launch checklist: favicon, OG image + meta tags, ~~404 page~~
+  (shipped ad9303d), Lighthouse pass (perf + a11y), decide repo
+  visibility (currently private)
 
 ## Agreed earlier, still parked
 
