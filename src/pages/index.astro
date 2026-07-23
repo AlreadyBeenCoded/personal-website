@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import portrait from '../assets/me/andrew.jpeg';
 import { frontmatter as now } from '../content/now.mdx';
 
 const updated = new Date(now.updated).toLocaleDateString('en-GB', {
@@ -51,7 +53,7 @@ const rooms = [
 <Base title="Andrew Snider">
   <div class="mx-auto w-full max-w-5xl px-6 sm:px-8">
     <Hero />
-    <section aria-label="Around the site" class="pb-16">
+    <section aria-label="Around the site">
       <ul>
         {
           rooms.map(({ href, label, tick, text, note }) => (
@@ -71,6 +73,31 @@ const rooms = [
           ))
         }
       </ul>
+    </section>
+
+    {/*
+      Sign-off: a quiet grace note reading as one final, softer row of the
+      index above (same top hairline + rhythm). The portrait sits in an arch
+      — a doorway shape that rhymes with the room-index "doors" metaphor and
+      nods Japanese without being literal — kept in-grammar by the fog ring.
+      The portrait frame (taller than wide) also crops the 3:4 source less
+      than a circle would.
+    */}
+    <section aria-label="About Andrew" class="flex items-center gap-6 border-t border-fog/40 py-12 sm:gap-8">
+      <div class="h-36 w-28 shrink-0 overflow-hidden rounded-t-full border border-fog/60 sm:h-40 sm:w-32">
+        <Image
+          src={portrait}
+          alt="Andrew Snider"
+          widths={[224, 320, 384]}
+          sizes="8rem"
+          class="img-warm h-full w-full object-cover object-top"
+          loading="lazy"
+        />
+      </div>
+      <p class="max-w-[34ch] text-sm leading-relaxed text-ink-soft">
+        That&rsquo;s me. I&rsquo;d love to connect &mdash; be it bikes, systems,
+        or chasing after kids.
+      </p>
     </section>
   </div>
 </Base>
